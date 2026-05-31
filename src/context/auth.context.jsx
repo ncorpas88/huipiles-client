@@ -1,70 +1,93 @@
-import {
-  createContext,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, useEffect, useState } from "react";
 
-import api from "../services/api"
+import api from "../services/api";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 function AuthProvider(props) {
-  const [user, setUser] = useState(null)
+  // USER
+  const [user, setUser] = useState(null);
 
-  const [isLoading, setIsLoading] =
-    useState(true)
+  // LOADING
+  const [isLoading, setIsLoading] = useState(true);
 
+  // AUTH
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // VERIFY USER
   const verifyUser = async () => {
     try {
-      const storedToken =
-        localStorage.getItem("authToken")
+      const storedToken = localStorage.getItem("authToken");
 
-      if (storedToken) {
-        const response = await api.get(
-          "/auth/verify",
-          {
-            headers: {
-              Authorization:
-                `Bearer ${storedToken}`,
-            },
-          }
-        )
+      // NO TOKEN
+      if (!storedToken) {
+        setUser(null);
 
-        setUser(response.data.payload)
+        setIsLoggedIn(false);
+
+        setIsLoading(false);
+
+        return;
       }
+
+      // VERIFY TOKEN
+      const response = await api.get("/auth/verify", {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+
+      // SAVE USER
+      setUser(response.data.payload);
+
+      // LOGGED
+      setIsLoggedIn(true);
     } catch (error) {
-      setUser(null)
+      console.log(error);
+
+      // REMOVE INVALID TOKEN
+      localStorage.removeItem("authToken");
+
+      setUser(null);
+
+      setIsLoggedIn(false);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
+  // LOGOUT
   const logoutUser = () => {
-    localStorage.removeItem("authToken")
+    localStorage.removeItem("authToken");
 
-    setUser(null)
-  }
+    setUser(null);
 
+    setIsLoggedIn(false);
+  };
+
+  // ON LOAD
   useEffect(() => {
-    verifyUser()
-  }, [])
+    verifyUser();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         user,
         setUser,
+
         isLoading,
+
+        isLoggedIn,
+
         verifyUser,
+
         logoutUser,
       }}
     >
       {props.children}
     </AuthContext.Provider>
-  )
+  );
 }
 
-export {
-  AuthContext,
-  AuthProvider,
-}
+export { AuthContext, AuthProvider };
