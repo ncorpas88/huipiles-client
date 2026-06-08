@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 
 import "../styles/SignupPage.css";
+import BackButton from "../components/BackButton";
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ function SignupPage() {
 
       {/* CARD */}
       <div className="signup-card">
+        <BackButton />
         {/* LOGO */}
         <img
           src="/images/logosicaru.png"

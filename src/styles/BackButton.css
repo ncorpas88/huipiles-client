@@ -1,0 +1,27 @@
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  text-decoration: none;
+
+  color: #7c5e57;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: #fff8f3;
+  border: 1.5px solid #e8d8cc;
+
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.back-btn:hover {
+  background: #f0ddd0;
+  border-color: #c68b59;
+  color: #c68b59;
+  transform: translateX(-2px);
+}

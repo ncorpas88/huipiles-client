@@ -1,38 +1,31 @@
-import { Link } from "react-router-dom"
-import { useContext } from "react"
-
-import { AuthContext } from "../context/auth.context"
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { LayoutDashboard } from "lucide-react"; // ← añade esto
+import { AuthContext } from "../context/auth.context";
 
 function Navbar() {
-  const { user, logoutUser } =
-    useContext(AuthContext)
+  const { user, logoutUser } = useContext(AuthContext);
 
   return (
     <nav className="flex justify-between items-center p-4 border-b">
-      <Link
-        to="/"
-        className="text-2xl font-bold"
-      >
+      <Link to="/" className="text-2xl font-bold">
         SICARU
       </Link>
 
       <div className="flex gap-4 items-center">
-        <Link to="/products">
-          Productos
-        </Link>
+        <Link to="/products">Productos</Link>
 
         {user ? (
           <>
-            <Link to="/profile">
-              Perfil
-            </Link>
-
-            <Link to="/cart">
-              Carrito
-            </Link>
+            <Link to="/profile">Perfil</Link>
+            <Link to="/cart">Carrito</Link>
 
             {user.role === "admin" && (
-              <Link to="/admin">
+              <Link
+                to="/admin"
+                className="flex items-center gap-1 bg-black text-white px-3 py-1" // ← estilo destacado
+              >
+                <LayoutDashboard size={16} />
                 Admin
               </Link>
             )}
@@ -46,18 +39,13 @@ function Navbar() {
           </>
         ) : (
           <>
-            <Link to="/login">
-              Login
-            </Link>
-
-            <Link to="/signup">
-              Signup
-            </Link>
+            <Link to="/login">Login</Link>
+            <Link to="/signup">Signup</Link>
           </>
         )}
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

@@ -10,12 +10,15 @@ import {
 import { Link } from "react-router-dom";
 
 import "../styles/AdminDashboard.css";
+import BackButton from "../components/BackButton";
 
 function AdminDashboard() {
   return (
     <div className="admin-page">
       {/* OVERLAY */}
       <div className="admin-overlay"></div>
+
+      <BackButton />
 
       {/* HEADER */}
       <div className="admin-header">

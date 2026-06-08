@@ -7,6 +7,7 @@ import api from "../services/api";
 import { AuthContext } from "../context/auth.context";
 
 import "../styles/LoginPage.css";
+import BackButton from "../components/BackButton";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -66,6 +67,7 @@ function LoginPage() {
 
       {/* CARD */}
       <div className="login-card">
+        <BackButton />
         {/* LOGO */}
         <img
           src="/images/logosicaru.png"

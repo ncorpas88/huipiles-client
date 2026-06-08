@@ -1,0 +1,591 @@
+.profile-page {
+  min-height: 100vh;
+  background: #fdf8f5;
+  padding: 60px 40px;
+  font-family: 'Nunito', Arial, sans-serif;
+}
+
+/* =========================
+   BACK BUTTON SPACING
+========================= */
+
+.profile-page > .back-btn {
+  display: inline-flex;
+  margin-bottom: 28px;
+}
+
+/* =========================
+   HERO CARD (avatar + nombre)
+========================= */
+
+.profile-hero {
+  background: linear-gradient(135deg, #f8ede4 0%, #f0ddd0 100%);
+  border-radius: 32px;
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+/* Franja decorativa de colores oaxaqueños */
+.profile-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  border-radius: 32px 32px 0 0;
+  background: repeating-linear-gradient(
+    90deg,
+    #c2185b 0px, #c2185b 14%,
+    #e65100 14%, #e65100 28%,
+    #f9a825 28%, #f9a825 42%,
+    #2e7d32 42%, #2e7d32 56%,
+    #1565c0 56%, #1565c0 70%,
+    #6a1b9a 70%, #6a1b9a 84%,
+    #c2185b 84%, #c2185b 100%
+  );
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.profile-hero-info {
+  flex: 1;
+}
+
+.profile-username {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #5a3e38;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+.profile-email {
+  font-size: 16px;
+  color: #9c8176;
+  margin-bottom: 14px;
+}
+
+.profile-role-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.profile-role-badge.customer {
+  background: #f3e8dd;
+  color: #8a5e3a;
+}
+
+.profile-role-badge.admin {
+  background: #ede8f8;
+  color: #5e3a8a;
+}
+
+.profile-hero-actions {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.profile-edit-btn {
+  border: 1.5px solid #c68b59;
+  background: white;
+  color: #c68b59;
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-edit-btn:hover {
+  background: #c68b59;
+  color: white;
+}
+
+.profile-logout-btn {
+  border: 1.5px solid #d6b79a;
+  background: white;
+  color: #9c8176;
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.profile-logout-btn:hover {
+  background: #fde8e8;
+  border-color: #e07070;
+  color: #c0392b;
+}
+
+/* Avatar upload overlay */
+
+.avatar-upload-btn {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background: #c68b59;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.avatar-upload-btn:hover {
+  background: #b67945;
+  transform: scale(1.1);
+}
+
+/* Success toast */
+
+.save-success-toast {
+  max-width: 1000px;
+  margin: -20px auto 24px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  border-radius: 16px;
+  padding: 14px 24px;
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* =========================
+   INFO GRID
+========================= */
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  max-width: 1000px;
+  margin: 0 auto 40px;
+}
+
+.profile-card {
+  background: #fffdfb;
+  border-radius: 24px;
+  padding: 30px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0ddd0;
+}
+
+.profile-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #7c5e57;
+  letter-spacing: 0.5px;
+  margin-bottom: 22px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0ddd0;
+}
+
+/* =========================
+   EDIT FORM
+========================= */
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edit-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #b8a09a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.edit-input {
+  border: 1.5px solid #e8d8cc;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  color: #5f4b45;
+  background: #fffaf7;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.edit-input:focus {
+  border-color: #c68b59;
+  box-shadow: 0 0 0 3px rgba(198, 139, 89, 0.1);
+}
+
+.edit-error {
+  font-size: 14px;
+  color: #c0392b;
+  background: #fff0ee;
+  border-radius: 10px;
+  padding: 10px 14px;
+  border-left: 3px solid #e74c3c;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.edit-save-btn {
+  flex: 1;
+  border: none;
+  background: #c68b59;
+  color: white;
+  padding: 13px;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.edit-save-btn:hover {
+  background: #b67945;
+  transform: translateY(-1px);
+}
+
+.edit-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.edit-cancel-btn {
+  border: 1.5px solid #d6b79a;
+  background: white;
+  color: #9c8176;
+  padding: 13px 20px;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-cancel-btn:hover {
+  background: #f7ece4;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  font-size: 18px;
+  width: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #c4a89e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.info-value {
+  font-size: 15px;
+  color: #5a3e38;
+  font-weight: 600;
+}
+
+.info-value.empty {
+  color: #c4a89e;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Stats card */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat-item {
+  background: #fdf6f0;
+  border-radius: 16px;
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #c68b59;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #9c8176;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* =========================
+   ORDER HISTORY
+========================= */
+
+.orders-section {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.orders-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #7c5e57;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.orders-loading,
+.orders-empty {
+  background: #fffdfb;
+  border-radius: 24px;
+  padding: 50px;
+  text-align: center;
+  color: #9c8176;
+  font-size: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.order-card {
+  background: #fffdfb;
+  border-radius: 24px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+}
+
+.order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.order-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-id {
+  font-size: 12px;
+  color: #b8a09a;
+  font-family: monospace;
+}
+
+.order-date {
+  font-size: 14px;
+  color: #9c8176;
+  font-weight: 600;
+}
+
+.order-status {
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.order-status.pending  { background: #fff8e1; color: #f59e0b; }
+.order-status.paid     { background: #e8f4fd; color: #2196f3; }
+.order-status.shipped  { background: #f3e8fd; color: #8b5cf6; }
+.order-status.delivered{ background: #e8f5e9; color: #22c55e; }
+
+.order-products {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.order-product-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.order-product-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.order-product-name {
+  flex: 1;
+  font-weight: 600;
+  color: #5a3e38;
+  font-size: 15px;
+}
+
+.order-product-qty {
+  font-size: 13px;
+  color: #9c8176;
+}
+
+.order-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 14px;
+  border-top: 1px solid #f0ddd0;
+  gap: 8px;
+}
+
+.order-total-label {
+  font-size: 14px;
+  color: #9c8176;
+}
+
+.order-total-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #c68b59;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 40px 20px;
+  }
+
+  .profile-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 36px 24px;
+    gap: 20px;
+  }
+
+  .profile-hero-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .profile-edit-btn,
+  .profile-logout-btn {
+    width: 100%;
+  }
+
+  .profile-username {
+    font-size: 30px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

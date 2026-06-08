@@ -1,41 +1,48 @@
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useContext, useState } from "react"
-import { useNavigate } from "react-router-dom"
-
-import { AuthContext } from "../context/auth.context"
+import { AuthContext } from "../context/auth.context";
+import { CartContext } from "../context/cart.context";
+import api from "../services/api";
+import BackButton from "../components/BackButton";
+import "../styles/CheckoutPage.css";
 
 function CheckoutPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const { cartItems, isCartLoading, clearCart } = useContext(CartContext);
 
-  const { user } =
-    useContext(AuthContext)
+  const [formData, setFormData] = useState({
+    fullName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    phone: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
-  const [formData, setFormData] =
-    useState({
-      fullName: "",
-      address: "",
-      city: "",
-      postalCode: "",
-      phone: "",
-    })
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0
+  );
+  const shipping = 150;
+  const total = subtotal + shipping;
 
-  const [isLoading, setIsLoading] =
-    useState(false)
-
-  const [errorMessage, setErrorMessage] =
-    useState("")
+  useEffect(() => {
+    if (!isCartLoading && cartItems.length === 0 && !orderPlaced) {
+      navigate("/cart");
+    }
+  }, [cartItems, isCartLoading, orderPlaced]);
 
   const handleChange = (e) => {
-    setErrorMessage("")
-
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
+    setErrorMessage("");
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (
       !formData.fullName ||
@@ -44,136 +51,179 @@ function CheckoutPage() {
       !formData.postalCode ||
       !formData.phone
     ) {
-      return setErrorMessage(
-        "Todos los campos son obligatorios"
-      )
+      return setErrorMessage("Todos los campos son obligatorios");
     }
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
 
-      // Aquí luego conectaremos Stripe
-      console.log("Checkout enviado")
+      await api.post("/orders", {
+        products: cartItems.map((item) => ({
+          product: item.product._id,
+          quantity: item.quantity,
+        })),
+        totalPrice: total,
+      });
 
-      navigate("/profile")
+      await clearCart();
+      setOrderPlaced(true);
     } catch (error) {
-      console.log(error)
-
-      setErrorMessage(
-        "Error al procesar checkout"
-      )
+      console.log(error);
+      setErrorMessage("Error al procesar el pedido. Intenta de nuevo.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
+  };
+
+  if (orderPlaced) {
+    return (
+      <div className="checkout-page">
+        <div className="checkout-success">
+          <div className="success-icon">✓</div>
+          <h1 className="success-title">¡Pedido Realizado!</h1>
+          <p className="success-text">
+            Gracias por tu compra. Tu huipil artesanal está en camino. Recibirás
+            una confirmación pronto.
+          </p>
+          <button className="success-btn" onClick={() => navigate("/products")}>
+            Seguir Comprando
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
-      <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-10">
-        {/* Formulario */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h1 className="text-3xl font-bold mb-6">
-            Checkout
-          </h1>
+    <div className="checkout-page">
+      <BackButton />
+      <div className="checkout-header">
+        <h1 className="checkout-title">Finalizar Compra</h1>
+        <p className="checkout-subtitle">Ingresa tus datos de envío</p>
+      </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
-          >
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Nombre completo"
-              className="border p-3 rounded"
-              value={formData.fullName}
-              onChange={handleChange}
-            />
+      <div className="checkout-container">
+        {/* FORMULARIO */}
+        <div className="checkout-form-card">
+          <h2 className="form-section-title">Datos de Envío</h2>
 
-            <input
-              type="text"
-              name="address"
-              placeholder="Dirección"
-              className="border p-3 rounded"
-              value={formData.address}
-              onChange={handleChange}
-            />
+          <form onSubmit={handleSubmit} className="checkout-form">
+            <div className="form-group">
+              <label>Nombre completo</label>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Tu nombre completo"
+                className="form-input"
+                value={formData.fullName}
+                onChange={handleChange}
+              />
+            </div>
 
-            <input
-              type="text"
-              name="city"
-              placeholder="Ciudad"
-              className="border p-3 rounded"
-              value={formData.city}
-              onChange={handleChange}
-            />
+            <div className="form-group">
+              <label>Dirección</label>
+              <input
+                type="text"
+                name="address"
+                placeholder="Calle, número, colonia"
+                className="form-input"
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </div>
 
-            <input
-              type="text"
-              name="postalCode"
-              placeholder="Código postal"
-              className="border p-3 rounded"
-              value={formData.postalCode}
-              onChange={handleChange}
-            />
+            <div className="form-row">
+              <div className="form-group">
+                <label>Ciudad</label>
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="Ciudad"
+                  className="form-input"
+                  value={formData.city}
+                  onChange={handleChange}
+                />
+              </div>
 
-            <input
-              type="text"
-              name="phone"
-              placeholder="Teléfono"
-              className="border p-3 rounded"
-              value={formData.phone}
-              onChange={handleChange}
-            />
+              <div className="form-group">
+                <label>Código postal</label>
+                <input
+                  type="text"
+                  name="postalCode"
+                  placeholder="C.P."
+                  className="form-input"
+                  value={formData.postalCode}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Teléfono</label>
+              <input
+                type="text"
+                name="phone"
+                placeholder="Número de contacto"
+                className="form-input"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </div>
+
+            {errorMessage && <p className="form-error">{errorMessage}</p>}
 
             <button
+              type="submit"
+              className="place-order-btn"
               disabled={isLoading}
-              className="bg-black text-white p-3 rounded-xl hover:opacity-90 disabled:opacity-50"
             >
-              {isLoading
-                ? "Procesando..."
-                : "Finalizar Compra"}
+              {isLoading ? "Procesando..." : "Confirmar Pedido"}
             </button>
-
-            {errorMessage && (
-              <p className="text-red-500 text-sm">
-                {errorMessage}
-              </p>
-            )}
           </form>
         </div>
 
-        {/* Resumen */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg h-fit">
-          <h2 className="text-2xl font-bold mb-6">
-            Resumen
-          </h2>
+        {/* RESUMEN */}
+        <div className="checkout-summary-card">
+          <h2 className="form-section-title">Tu Pedido</h2>
 
-          <div className="flex justify-between mb-4">
-            <span>Productos</span>
-            <span>$120</span>
+          <div className="checkout-items-list">
+            {cartItems.map((item) => (
+              <div key={item.product._id} className="checkout-item">
+                <img
+                  src={item.product.image}
+                  alt={item.product.title}
+                  className="checkout-item-img"
+                />
+                <div className="checkout-item-info">
+                  <p className="checkout-item-title">{item.product.title}</p>
+                  <p className="checkout-item-qty">Cant: {item.quantity}</p>
+                </div>
+                <span className="checkout-item-price">
+                  ${item.product.price * item.quantity}
+                </span>
+              </div>
+            ))}
           </div>
 
-          <div className="flex justify-between mb-4">
-            <span>Envío</span>
-            <span>$10</span>
+          <div className="checkout-totals">
+            <div className="checkout-row">
+              <span>Subtotal</span>
+              <span>${subtotal}</span>
+            </div>
+            <div className="checkout-row">
+              <span>Envío</span>
+              <span>${shipping}</span>
+            </div>
+            <div className="checkout-total-row">
+              <span>Total</span>
+              <span>${total}</span>
+            </div>
           </div>
 
-          <div className="border-t pt-4 flex justify-between text-xl font-bold">
-            <span>Total</span>
-            <span>$130</span>
-          </div>
-
-          <div className="mt-6 text-sm text-gray-500">
-            <p>
-              Usuario:
-              {" "}
-              {user?.email}
-            </p>
-          </div>
+          <p className="checkout-user-info">Cuenta: {user?.email}</p>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default CheckoutPage
+export default CheckoutPage;
