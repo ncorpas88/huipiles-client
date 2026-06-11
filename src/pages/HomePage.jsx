@@ -3,6 +3,7 @@ import { ShoppingCart, Menu, Search, Camera, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { CartContext } from "../context/cart.context";
+import CenafeFloral from "../components/CenafeFloral";
 import "../styles/HomePage.css";
 
 function HomePage() {
@@ -70,7 +71,7 @@ function HomePage() {
 
       {/* HERO */}
       <section className="hero">
-        <h1 className="hero-title">Sicaru</h1>
+        <CenafeFloral />
 
         <p className="hero-text">
           Huipiles artesanales únicos, hechos con tradición, cultura y

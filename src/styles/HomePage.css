@@ -216,9 +216,15 @@
 
   text-align: center;
 
-  padding: 52px 24px 48px;
+  padding: 44px 24px 44px;
 
   background: linear-gradient(to bottom, #fdf6f0, #f7ebe2);
+}
+
+/* La cenefa SVG recibe sombra suave para dar profundidad de bordado */
+.hero > svg {
+  filter: drop-shadow(0 3px 8px rgba(100, 30, 50, 0.18));
+  margin-bottom: 10px;
 }
 
 /* SICARU — efecto bordado oaxaqueño */
